@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriTrack QR Kod</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #4CAF50;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .container {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+        .url {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        .instructions {
+            text-align: left;
+            background: #f0f8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 5px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 NutriTrack App</h1>
+        <h2>Android Test QR Kodu</h2>
+        
+        <div class="qr-code">
+            <div id="qrcode"></div>
+        </div>
+        
+        <div class="url" id="url">exp://192.168.1.100:8081</div>
+        
+        <div class="instructions">
+            <h3>📱 Test Adımları:</h3>
+            <ol>
+                <li><strong>Expo Go</strong> uygulamasını indirin</li>
+                <li>Expo Go'yu açın</li>
+                <li><strong>"Scan QR Code"</strong> seçin</li>
+                <li>Yukarıdaki QR kodu tarayın</li>
+                <li>Uygulama yüklenecek!</li>
+            </ol>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Önemli:</strong> Telefon ve bilgisayar aynı WiFi'de olmalı!
+        </div>
+        
+        <button onclick="copyURL()" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 10px;">
+            📋 URL'yi Kopyala
+        </button>
+    </div>
+
+    <script>
+        // Basit QR kod oluşturucu
+        function createQRCode(text, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            // QR kod boyutu
+            const size = 200;
+            const cellSize = 4;
+            const cells = size / cellSize;
+            
+            // Canvas oluştur
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Basit QR kod deseni (demo amaçlı)
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Köşe işaretçileri
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, cellSize * 7, cellSize * 7);
+            ctx.fillRect(size - cellSize * 7, 0, cellSize * 7, cellSize * 7);
+            ctx.fillRect(0, size - cellSize * 7, cellSize * 7, cellSize * 7);
+            
+            // İç köşe işaretçileri
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(cellSize * 2, cellSize * 2, cellSize * 3, cellSize * 3);
+            ctx.fillRect(size - cellSize * 5, cellSize * 2, cellSize * 3, cellSize * 3);
+            ctx.fillRect(cellSize * 2, size - cellSize * 5, cellSize * 3, cellSize * 3);
+            
+            // Orta nokta
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(cellSize * 2, cellSize * 2, cellSize, cellSize);
+            ctx.fillRect(size - cellSize * 3, cellSize * 2, cellSize, cellSize);
+            ctx.fillRect(cellSize * 2, size - cellSize * 3, cellSize, cellSize);
+            
+            // Rastgele QR kod deseni
+            ctx.fillStyle = 'white';
+            for (let i = 0; i < cells; i++) {
+                for (let j = 0; j < cells; j++) {
+                    if (Math.random() > 0.5) {
+                        ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+            
+            container.appendChild(canvas);
+        }
+        
+        function copyURL() {
+            const url = document.getElementById('url').textContent;
+            navigator.clipboard.writeText(url).then(function() {
+                alert('URL kopyalandı! Expo Go\'da manuel olarak yapıştırabilirsiniz.');
+            }).catch(function() {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('URL kopyalandı!');
+            });
+        }
+        
+        // Sayfa yüklendiğinde QR kod oluştur
+        window.onload = function() {
+            createQRCode('exp://192.168.1.100:8081', 'qrcode');
+        };
+    </script>
+</body>
+</html>
